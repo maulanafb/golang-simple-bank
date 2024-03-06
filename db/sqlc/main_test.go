@@ -26,8 +26,23 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatal("cannot begin transaction:", err)
 	}
-	defer tx.Rollback(context.Background())
 
+	// Assign the testQueries with the transaction
 	testQueries = New(tx)
-	os.Exit(m.Run())
+
+	// Run tests
+	exitCode := m.Run()
+
+	// Commit the transaction after tests are completed
+	if err := tx.Commit(context.Background()); err != nil {
+		log.Fatal("cannot commit transaction:", err)
+	}
+
+	// Close the connection
+	if err := conn.Close(context.Background()); err != nil {
+		log.Fatal("cannot close connection:", err)
+	}
+
+	// Exit with the test result code
+	os.Exit(exitCode)
 }
