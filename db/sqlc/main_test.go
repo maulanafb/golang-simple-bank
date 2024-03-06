@@ -35,12 +35,12 @@ func TestMain(m *testing.M) {
 
 	// Commit the transaction after tests are completed
 	if err := tx.Commit(context.Background()); err != nil {
-		log.Fatal("cannot commit transaction:", err)
+		log.Println("error committing transaction:", err)
 	}
 
 	// Close the connection
 	if err := conn.Close(context.Background()); err != nil {
-		log.Fatal("cannot close connection:", err)
+		log.Println("error closing connection:", err)
 	}
 
 	// Exit with the test result code
